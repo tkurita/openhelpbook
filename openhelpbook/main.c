@@ -6,11 +6,6 @@
 
 #define BUFFER_SIZE MAXPATHLEN+1
 
-/* To DO
- - realpath を使って相対パスをサポート
- https://stackoverflow.com/questions/1563168/example-of-realpath-function-c-programming
- - getpwd を使って、引数がないときはカレントディレクトリをバンドルとみなす。
- */
 enum {
     regiesrHBErr            = 1850,  /*Failed to register HelpBook*/
     NoCFBundleHelpBookName = 1852 /*No CFBundleHelpBookName in Info.plist*/
