@@ -1,8 +1,16 @@
 #include <stdio.h>
 #include <Carbon/Carbon.h>
-#include <CoreServices/CoreServices.h>
 #include <getopt.h>
+#include <sys/param.h> // MAXPATHLEN
+#include <stdlib.h> // realpath, perror
 
+#define BUFFER_SIZE MAXPATHLEN+1
+
+/* To DO
+ - realpath を使って相対パスをサポート
+ https://stackoverflow.com/questions/1563168/example-of-realpath-function-c-programming
+ - getpwd を使って、引数がないときはカレントディレクトリをバンドルとみなす。
+ */
 enum {
     regiesrHBErr            = 1850,  /*Failed to register HelpBook*/
     NoCFBundleHelpBookName = 1852 /*No CFBundleHelpBookName in Info.plist*/
@@ -38,48 +46,10 @@ void safeRelease(CFTypeRef theObj)
     }
 }
 
-int main(int argc, char * const argv[]) {
-    
-    if (argc <= 1) {
-        fprintf(stderr, "No arguments.\n");
-        usage();
-        return 1;
-    }
-    
-    static struct option long_options[] = {
-        {"version", no_argument, NULL, 'v'},
-        {"help", no_argument, NULL, 'h'},
-        {0, 0}
-    };
-    
-    int c;
-    int option_index = 0;
-    while(1){
-        c = getopt_long(argc, argv, "vh",long_options, &option_index);
-        if (c == -1)
-            break;
-        
-        switch(c){
-            case 'h':
-                usage();
-                exit(0);
-            case 'v':
-                showVersion();
-                exit(0);
-            case '?':
-            default	:
-                fprintf(stderr, "There is unknown option.\n");
-                usage(); 
-                exit(-1);
-                break;
-        }
-        optarg	=	NULL;
-    }
-    
-    char *inpath = argv[optind];
+OSStatus open_helpbook(char *inpath) {
     CFBundleRef bundle = NULL;
     CFStringRef bookname= NULL;
-    CFStringRef filepath = CFStringCreateWithCString(NULL,inpath,kCFStringEncodingUTF8);
+    CFStringRef filepath = CFStringCreateWithCString(NULL, inpath, kCFStringEncodingUTF8);
     CFURLRef bundle_url = CFURLCreateWithFileSystemPath(NULL,filepath, kCFURLPOSIXPathStyle, true);
     OSStatus status = AHRegisterHelpBookWithURL(bundle_url);
     if (noErr != status) {
@@ -101,5 +71,59 @@ bail:
     safeRelease(bundle_url);
     safeRelease(bundle);
     safeRelease(bookname);
+    return status;
+}
+
+int main(int argc, char * const argv[]) {
+    
+    static struct option long_options[] = {
+        {"version", no_argument, NULL, 'v'},
+        {"help", no_argument, NULL, 'h'},
+        {0, 0}
+    };
+    
+    int c;
+    int option_index = 0;
+    while(1){
+        c = getopt_long(argc, argv, "vh",long_options, &option_index);
+        if (c == -1)
+            break;
+        
+        switch(c){
+            case 'h':
+                usage();
+                exit(EXIT_SUCCESS);
+            case 'v':
+                showVersion();
+                exit(EXIT_SUCCESS);
+            case '?':
+            default	:
+                fprintf(stderr, "There is unknown option.\n");
+                usage(); 
+                exit(EXIT_FAILURE);
+                break;
+        }
+        optarg	=	NULL;
+    }
+    OSStatus status = EXIT_SUCCESS;
+    char buf[BUFFER_SIZE];
+    if (optind == argc) { // No arguments
+        if (getwd(buf) == NULL) {
+            perror("getwd error");
+            exit(EXIT_FAILURE);
+        }
+        status = open_helpbook(buf);
+    } else {
+        for (short i = optind; i < argc; i++) {
+            char *inpath = argv[optind];
+            char *res = realpath(inpath, buf);
+            if (! res) {
+                perror("realpath error");
+                exit(EXIT_FAILURE);
+            }
+            status = open_helpbook(buf);
+            if (noErr != status) exit(status);
+        }
+    }
     return status;
 }
