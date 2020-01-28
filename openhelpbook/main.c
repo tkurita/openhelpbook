@@ -16,7 +16,7 @@ void usage() {
 }
 
 void showVersion() {
-    printf("openhelpbook 1.0 copyright 2018, Tetsuro KURITA\n");
+    printf("openhelpbook 1.0.1 copyright 2018-2020, Tetsuro KURITA\n");
 }
 
 
@@ -55,6 +55,7 @@ OSStatus open_helpbook(char *inpath) {
     bookname = CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("CFBundleHelpBookName"));
     if (!bookname) {
         display_error_message(NoCFBundleHelpBookName, inpath);
+        status = NoCFBundleHelpBookName;
         goto bail;
     }
     status = AHGotoPage(bookname, NULL, NULL);
@@ -108,6 +109,7 @@ int main(int argc, char * const argv[]) {
             exit(EXIT_FAILURE);
         }
         status = open_helpbook(buf);
+        if (noErr != status) status = status - 1800;
     } else {
         for (short i = optind; i < argc; i++) {
             char *inpath = argv[optind];
@@ -117,8 +119,9 @@ int main(int argc, char * const argv[]) {
                 exit(EXIT_FAILURE);
             }
             status = open_helpbook(buf);
-            if (noErr != status) exit(status);
+            if (noErr != status) status = status - 1800;
         }
     }
+
     return status;
 }
