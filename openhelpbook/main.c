@@ -16,7 +16,7 @@ void usage() {
 }
 
 void showVersion() {
-    printf("openhelpbook 1.0.1 copyright 2018-2020, Tetsuro KURITA\n");
+    printf("openhelpbook 1.0.2 copyright 2018-2020, Tetsuro KURITA\n");
 }
 
 
@@ -66,7 +66,7 @@ bail:
     safeRelease(filepath);
     safeRelease(bundle_url);
     safeRelease(bundle);
-    safeRelease(bookname);
+    //safeRelease(bookname); Don't relase because Get rule
     return status;
 }
 
