@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -23,6 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2C2807AA23E24E8A00845F3D /* openhelpbook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = openhelpbook.entitlements; sourceTree = "<group>"; };
 		2C3B62BA21CCCA9900A0C13F /* openhelpbook */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = openhelpbook; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C3B62BD21CCCA9900A0C13F /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,6 +58,7 @@
 		2C3B62BC21CCCA9900A0C13F /* openhelpbook */ = {
 			isa = PBXGroup;
 			children = (
+				2C2807AA23E24E8A00845F3D /* openhelpbook.entitlements */,
 				2C3B62BD21CCCA9900A0C13F /* main.c */,
 			);
 			path = openhelpbook;
@@ -93,13 +95,12 @@
 				TargetAttributes = {
 					2C3B62B921CCCA9900A0C13F = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = N3YK2F43T4;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = 2C3B62B521CCCA9900A0C13F /* Build configuration list for PBXProject "openhelpbook" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -218,8 +219,10 @@
 		2C3B62C221CCCA9900A0C13F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = openhelpbook/openhelpbook.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = N3YK2F43T4;
+				DEVELOPMENT_TEAM = 5VBC6385DN;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INSTALL_PATH = /local/bin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -228,8 +231,10 @@
 		2C3B62C321CCCA9900A0C13F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = openhelpbook/openhelpbook.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = N3YK2F43T4;
+				DEVELOPMENT_TEAM = 5VBC6385DN;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INSTALL_PATH = /local/bin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
